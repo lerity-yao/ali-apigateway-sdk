@@ -41,14 +41,14 @@ s := sdk.MustNewApiGatewayClient(config)
 body := make(map[string]interface{})
 body["categoryId"] = ""
 
-data, err := s.ApiWithoutCtx(sdk.HTTPMethodPost, "/xxxxx", sdk.HTTPContentTypeJson, body).Do()
+data, err := s.NewApiWithCtx(ctx, sdk.HTTPMethodPost, "/xxxxx", sdk.HTTPContentTypeJson, body).Do()
 ```
 
 ### application/x-www-form-urlencoded
 ```go
 body := "key1=value1&key2=value2"
 
-data, err := s.ApiWithoutCtx(sdk.HTTPMethodPost, "/xxxx", sdk.HTTPContentTypeForm, body).Do()
+data, err := s.NewApiWithCtx(ctx,sdk.HTTPMethodPost, "/xxxx", sdk.HTTPContentTypeForm, body).Do()
 ```
 
 ### multipart/form-data
@@ -63,20 +63,20 @@ writer.WriteField("field2", "value2")
 // 创建一个 form 文件部分
 formFile, err := body.CreateFormFile("file", fmt.Sprintf("0%s", extStr))
 if err != nil {
-return nil, err
+    return nil, err
 }
 
 // 将文件流直接写入到 form 文件部分
 if _, err := io.Copy(formFile, file); err != nil {
-return nil, err
+    return nil, err
 }
 
 // 结束 multipart 写入
 if err := writer.Close(); err != nil {
-return nil, err
+    return nil, err
 }
 
-data, err := s.ApiWithoutCtx(sdk.HTTPMethodPost, "/xxxx", writer.FormDataContentType(), b).Do()
+data, err := s.NewApiWithCtx(ctx, sdk.HTTPMethodPost, "/xxxx", writer.FormDataContentType(), b).Do()
 
 ```
 
@@ -85,5 +85,5 @@ data, err := s.ApiWithoutCtx(sdk.HTTPMethodPost, "/xxxx", writer.FormDataContent
 
 ```go
 path := "/xxxxx?key1=value1&key2=value2"
-data, err := s.ApiWithoutCtx(sdk.HTTPMethodPost, path, sdk.HTTPContentTypeForm, nil).Do()
+data, err := s.NewApiWithCtx(ctx, sdk.HTTPMethodPost, path, sdk.HTTPContentTypeForm, nil).Do()
 ```
